@@ -1,0 +1,45 @@
+v1.6.3 (2016-09-25)
+- Update mutagen module
+
+v1.6.2 (2016-09-17)
+- Add support for automatically detecting ffmpeg packages
+- Add support for running ffmpeg on OS X
+- Improve reading images from mp3 files
+
+v1.6.1 (2016-09-16)
+- Add support for network shares without ffmpeg
+
+v1.6.0 (2016-09-11)
+- Add support for metadata and artwork without the need for ffmpeg
+
+v1.5.2 (2016-08-27)
+- Allow ffmpeg libraries to be used
+
+v1.5.1 (2016-08-19)
+- Moved to robwebset repository
+
+v1.4.1 (2016-04-05)
+- Tidy up import, globals and plugin provides
+
+v1.4.0 (2016-03-19)
+- Order Books by title if available, otherwise file name
+- Support folder.jpg and cover.jpg files
+- Improve end of book detection for multiple file books
+- Prevent the lyrics being searched for audiobooks
+
+v1.3.0 (2016-01-28)
+- Support running ffmpeg on older python versions
+
+v1.2.0 (2016-01-05)
+- Fix character encoding issue
+
+v1.1.1 (2015-10-21)
+- Add support for running ffmpeg on smb and nfs shares
+
+v1.1.0  (2015-10-02)
+- Add support for non m4b audio books
+- Improve error handling of ffmpeg
+- Add option to automatically number chapters
+
+v1.0.0 (2015-09-24)
+- Initial Release

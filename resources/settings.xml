@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<category label="32002">
+		<setting id="audioBooksFolder" label="32005" type="folder"/>
+    	<setting id="markCompletedItems" label="32016" type="bool" default="true"/>
+    	<setting id="autoNumberChapters" label="32020" type="bool" default="false"/>
+		<setting id="fallbackCoverImage" label="32014" type="image"/>
+	</category>
+	<category label="32015">
+    	<setting id="ffmpegDetectOnStartup" label="32027" type="bool" default="true"/>
+		<setting id="ffmpegSetting" type="enum" label="32022" lvalues="32023|32024|32025" default="0"/>
+		<setting id="ffmpegLibraryLocation" visible="eq(-1,1)" subsetting="true" label="32026" type="folder"/>
+		<setting id="ffmpegLocation" visible="eq(-2,2)" subsetting="true" label="32021" type="file"/>
+	</category>
+	<category label="32007">
+		<setting label="32008" type="action" action="RunScript($CWD/cleancovercache.py)"/>
+		<setting label="32012" type="action" action="RunScript($CWD/deletedb.py)"/>
+    	<setting label="32003" type="lsep"/>
+    	<setting id="logEnabled" type="bool" label="32004" default="false"/>
+	</category>
+</settings>

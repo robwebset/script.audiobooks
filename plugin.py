@@ -8,6 +8,11 @@ import xbmcplugin
 import xbmcaddon
 import xbmcvfs
 
+if sys.version_info >= (2, 7):
+    import json
+else:
+    import simplejson as json
+
 # Import the common settings
 from resources.lib.settings import Settings
 from resources.lib.settings import log
@@ -333,9 +338,22 @@ if __name__ == '__main__':
     # If None, then at the root
     if mode is None:
         log("AudioBooksPlugin: Mode is NONE - showing root menu")
-        menuNav = MenuNavigator(base_url, addon_handle)
-        menuNav.showAudiobooks()
-        del menuNav
+
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "Addons.GetAddonDetails", "params": { "addonid": "repository.robwebset", "properties": ["enabled", "broken", "name", "author"]  }, "id": 1}')
+        json_response = json.loads(json_query)
+
+        displayNotice = True
+        if ("result" in json_response) and ('addon' in json_response['result']):
+            addonItem = json_response['result']['addon']
+            if (addonItem['enabled'] is True) and (addonItem['broken'] is False) and (addonItem['type'] == 'xbmc.addon.repository') and (addonItem['addonid'] == 'repository.robwebset') and (addonItem['author'] == 'robwebset'):
+                displayNotice = False
+
+                menuNav = MenuNavigator(base_url, addon_handle)
+                menuNav.showAudiobooks()
+                del menuNav
+
+        if displayNotice:
+            xbmc.executebuiltin('Notification("robwebset Repository Required","github.com/robwebset/repository.robwebset",10000,%s)' % ADDON.getAddonInfo('icon'))
     elif mode[0] == 'directory':
         log("AudioBooksPlugin: Mode is Directory")
 

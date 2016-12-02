@@ -131,3 +131,15 @@ msgstr ""
 msgctxt "#32027"
 msgid "Auto Detect FFmpeg On Next Restart"
 msgstr ""
+
+msgctxt "#32028"
+msgid "Show Artist Name In Book List"
+msgstr ""
+
+msgctxt "#32029"
+msgid "Show Play Button If Only One Chapter"
+msgstr ""
+
+msgctxt "#32030"
+msgid "Play"
+msgstr ""

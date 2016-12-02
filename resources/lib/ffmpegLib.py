@@ -250,6 +250,9 @@ class FFMpegLib(FfmpegBase):
             album = ""
             if 'album' in mainInfo:
                 album = mainInfo['album']
+            artist = ""
+            if 'artist' in mainInfo:
+                artist = mainInfo['artist']
 
             log("FFMpegLib: Title = %s, Album = %s, Duration = %d" % (title, album, duration))
             chapters = []
@@ -288,7 +291,7 @@ class FFMpegLib(FfmpegBase):
                 detail = {'title': chapterTitle.strip(), 'startTime': start_time, 'endTime': end_time, 'duration': end_time - start_time}
                 chapters.append(detail)
 
-            returnData = {'title': title, 'album': album, 'duration': duration, 'chapters': chapters}
+            returnData = {'title': title, 'album': album, 'artist': artist, 'duration': duration, 'chapters': chapters}
         except:
             log("FFMpegLib: Failed to get data using ffmpeg library for file %s with error %s" % (mediaName, traceback.format_exc()), xbmc.LOGERROR)
 
@@ -465,11 +468,13 @@ class FfmpegCmd(FfmpegBase):
         # The pattern that finds the title for a chapter
         title_pattern = re.compile('^\s*title\s*:\s*(.*)$', re.IGNORECASE)
         album_pattern = re.compile('^\s*album\s*:\s*(.*)$', re.IGNORECASE)
+        artist_pattern = re.compile('^\s*artist\s*:\s*(.*)$', re.IGNORECASE)
         # The pattern to find the total duration
         duration_pattern = re.compile('^\s*Duration\s*:\s*(.*), start', re.IGNORECASE)
 
         title = None
         album = None
+        artist = None
         duration = None
         chapters = []
         totalDuration = None
@@ -500,6 +505,12 @@ class FfmpegCmd(FfmpegBase):
                 if main_album_match:
                     album = main_album_match.group(1)
                     log("FfmpegCmd: Found album in ffmpeg output: %s" % album)
+
+            if artist in [None, ""]:
+                main_artist_match = artist_pattern.match(line)
+                if main_artist_match:
+                    artist = main_artist_match.group(1)
+                    log("FfmpegCmd: Found artist in ffmpeg output: %s" % artist)
 
             if duration in [None, 0, ""]:
                 main_duration_match = duration_pattern.match(line)
@@ -552,7 +563,7 @@ class FfmpegCmd(FfmpegBase):
         if (title in [None, ""]) and (album in [None, ""]) and (duration in [None, ""]) and (len(chapters) < 1):
             returnData = None
         else:
-            returnData = {'title': title, 'album': album, 'duration': duration, 'chapters': chapters}
+            returnData = {'title': title, 'album': album, 'artist': artist, 'duration': duration, 'chapters': chapters}
         return returnData
 
     # Converts a time string 00:00:00.00 to the total number of seconds

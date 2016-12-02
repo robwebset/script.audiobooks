@@ -168,6 +168,14 @@ class Settings():
         return ADDON.getSetting("autoNumberChapters") == 'true'
 
     @staticmethod
+    def isShowArtistInBookList():
+        return ADDON.getSetting("showArtistInBookList") == 'true'
+
+    @staticmethod
+    def isShowPlayButtonIfOneChapter():
+        return ADDON.getSetting("showPlayButtonIfOneChapter") == 'true'
+
+    @staticmethod
     def getFallbackCoverImage():
         fallbackCover = ADDON.getSetting("fallbackCoverImage")
         if fallbackCover in [None, ""]:

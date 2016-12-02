@@ -193,7 +193,8 @@ class MenuNavigator():
             displayTime = self._getDisplayTimeFromSeconds(secondsIn)
             displayName = "%s %s" % (ADDON.getLocalizedString(32019), displayTime)
 
-            if chapterPosition > 0:
+            # Add the Chapter being read if there are many chapters
+            if (chapterPosition > 0) and (len(chapters) > 1):
                 displayName = "%s (%s: %d)" % (displayName, ADDON.getLocalizedString(32017), chapterPosition)
 
             li = xbmcgui.ListItem(displayName, iconImage=defaultImage)
@@ -207,19 +208,23 @@ class MenuNavigator():
             chapterNum += 1
             url = self._build_url({'mode': 'play', 'filename': audioBookHandler.getFile(True), 'startTime': audioBookHandler.getChapterStart(chapterNum), 'chapter': chapterNum})
 
-            # Check if the current position means that this chapter has already been played
-            try:
-                displayString = chapter['title'].encode("utf-8")
-            except:
-                displayString = chapter['title']
+            displayString = ""
+            if Settings.isShowPlayButtonIfOneChapter() and (len(chapters) == 1):
+                displayString = ADDON.getLocalizedString(32030)
+            else:
+                try:
+                    displayString = chapter['title'].encode("utf-8")
+                except:
+                    displayString = chapter['title']
 
             # Check if we need to add a number at the start of the chapter
-            if Settings.autoNumberChapters() and (len(displayString) > 0):
+            if Settings.autoNumberChapters() and (len(displayString) > 0) and (len(chapters) > 1):
                 # Check to make sure that the display chapter does not already
                 # start with a number, or end with a number
                 if not (displayString[0].isdigit() or displayString[-1].isdigit()):
                     displayString = "%d. %s" % (chapterNum, displayString)
 
+            # Check if the current position means that this chapter has already been played
             if Settings.isMarkCompletedItems():
                 if (audioBookHandler.isCompleted()) or ((chapter['endTime'] < secondsIn) and (chapter['endTime'] > 0)) or (chapterNum < chapterPosition):
                     displayString = '* %s' % displayString

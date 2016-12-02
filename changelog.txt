@@ -1,3 +1,8 @@
+v100.7.0 (2016-12-02)
+- Only show Chapter number on resume if more than one chapter
+- Option to display Artist name on book list
+- Option to show play button rather than chapter name (when only one chapter)
+
 v1.6.3 (2016-09-25)
 - Update mutagen module
 

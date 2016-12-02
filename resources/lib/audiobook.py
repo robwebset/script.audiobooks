@@ -83,6 +83,7 @@ class AudioBookHandler():
 
         title = ""
         album = ""
+        artist = ""
         duration = -1
         try:
             try:
@@ -97,6 +98,7 @@ class AudioBookHandler():
                 # Get all the available data
                 title = mutagenFile.get('title', emptyArray)[0]
                 album = mutagenFile.get('album', emptyArray)[0]
+                artist = mutagenFile.get('artist', emptyArray)[0]
                 if mutagenFile.info not in [None, ""]:
                     if mutagenFile.info.length not in [None, ""]:
                         duration = int(float(mutagenFile.info.length))
@@ -113,12 +115,13 @@ class AudioBookHandler():
             log("AudioBookHandler: Failed to read metadata for audio book %s, %s" % (fullPath, traceback.format_exc()))
             title = None
             album = None
+            artist = None
             duration = None
 
         # If we had to copy the file locally, make sure we delete it
         self._removeCopiedFile(copiedFile)
 
-        return title, album, duration
+        return title, album, artist, duration
 
     def _saveAlbumArtFromMetadata(self, inputFileName):
         log("AudioBookHandler: Saving album art for audio book %s" % inputFileName)
@@ -494,10 +497,20 @@ class M4BHandler(AudioBookHandler):
 
     def _loadBookDetails(self):
         # For the m4b book details we can just read from the meta data
-        title, album, duration = self._readMetaData(self.filePath)
+        title, album, artist, duration = self._readMetaData(self.filePath)
 
         if title not in [None, ""]:
             self.title = title
+
+            # Check if the title should start with the artist name
+            if Settings.isShowArtistInBookList():
+                if artist not in [None, ""]:
+                    # Make sure the artist name is not already in the title
+                    if (not title.startswith(artist)) and (not title.endswith(artist)):
+                        try:
+                            self.title = "%s - %s" % (artist, title)
+                        except:
+                            log("M4BHandler: Failed to add artist to title")
 
         if duration not in [None, "", 0, -1]:
             self.totalDuration = duration
@@ -518,6 +531,18 @@ class M4BHandler(AudioBookHandler):
 
         if info not in [None, ""]:
             self.title = info['title']
+
+            # Check if the title should start with the artist name
+            if Settings.isShowArtistInBookList() and (self.title not in [None, ""]):
+                artist = info['artist']
+                if artist not in [None, ""]:
+                    # Make sure the artist name is not already in the title
+                    if (not self.title.startswith(artist)) and (not self.title.endswith(artist)):
+                        try:
+                            self.title = "%s - %s" % (artist, self.title)
+                        except:
+                            log("M4BHandler: Failed to add artist to title")
+
             self.chapters = info['chapters']
             self.totalDuration = info['duration']
 
@@ -551,13 +576,24 @@ class FolderHandler(AudioBookHandler):
             self.chapterFiles.append(fullpath)
 
             # Make the call to metadata to get the details of the chapter
-            title, album, duration = self._readMetaData(fullpath)
+            title, album, artist, duration = self._readMetaData(fullpath)
 
             chapterTitle = None
             endTime = 0
             if self.title in [None, ""]:
                 if album not in [None, ""]:
                     self.title = album
+
+                    # Check if the title should start with the artist name
+                    if Settings.isShowArtistInBookList():
+                        if artist not in [None, ""]:
+                            # Make sure the artist name is not already in the title
+                            if (not album.startswith(artist)) and (not album.endswith(artist)):
+                                try:
+                                    self.title = "%s - %s" % (artist, album)
+                                except:
+                                    log("FolderHandler: Failed to add artist to title")
+
             if title not in [None, ""]:
                 chapterTitle = title
             if duration not in [None, 0]:
@@ -614,6 +650,18 @@ class FolderHandler(AudioBookHandler):
             if info not in [None, ""]:
                 if self.title in [None, ""]:
                     self.title = info['album']
+
+                    # Check if the title should start with the artist name
+                    if Settings.isShowArtistInBookList():
+                        artist = info['artist']
+                        if artist not in [None, ""]:
+                            # Make sure the artist name is not already in the title
+                            if (not self.title.startswith(artist)) and (not self.title.endswith(artist)):
+                                try:
+                                    self.title = "%s - %s" % (artist, self.title)
+                                except:
+                                    log("FolderHandler: Failed to add artist to title")
+
                 duration = info['duration']
                 chapterTitle = info['title']
                 if duration not in [None, 0]:

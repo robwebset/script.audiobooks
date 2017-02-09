@@ -365,6 +365,8 @@ class AudioBookHandler():
         if (bookExt not in [None, ""]) and (len(bookExt) < 5):
             fullpathLocalImage1 = "%s.jpg" % fullpathLocalImage
             fullpathLocalImage2 = "%s.JPG" % fullpathLocalImage
+            fullpathLocalImage3 = "%s.png" % fullpathLocalImage
+            fullpathLocalImage4 = "%s.PNG" % fullpathLocalImage
 
             if xbmcvfs.exists(fullpathLocalImage1):
                 log("AudioBookHandler: Found local cached image %s" % fullpathLocalImage1)
@@ -372,6 +374,12 @@ class AudioBookHandler():
             if xbmcvfs.exists(fullpathLocalImage2):
                 log("AudioBookHandler: Found local cached image %s" % fullpathLocalImage2)
                 return fullpathLocalImage2
+            if xbmcvfs.exists(fullpathLocalImage3):
+                log("AudioBookHandler: Found local cached image %s" % fullpathLocalImage3)
+                return fullpathLocalImage3
+            if xbmcvfs.exists(fullpathLocalImage4):
+                log("AudioBookHandler: Found local cached image %s" % fullpathLocalImage4)
+                return fullpathLocalImage4
 
             # If we reach here, then we were a file, so get the directory part
             parentPath = (os_path_split(self.filePath))[0]
@@ -380,7 +388,7 @@ class AudioBookHandler():
         # "cover.jpg" or "folder.jpg
         dirs, files = xbmcvfs.listdir(parentPath)
         for file in files:
-            if file.lower() in ['folder.jpg', 'cover.jpg']:
+            if file.lower() in ['folder.jpg', 'cover.jpg', 'folder.png', 'cover.png']:
                 fullpathLocalImage = os_path_join(parentPath, file)
                 log("AudioBookHandler: Found local directory cover %s" % fullpathLocalImage)
                 return fullpathLocalImage

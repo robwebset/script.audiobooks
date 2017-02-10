@@ -211,3 +211,7 @@ class Settings():
         if aFile.endswith('.mp3') or aFile.endswith('.flac') or aFile.endswith('.wav') or aFile.endswith('.m4a') or aFile.endswith('.wma'):
             audioFileType = True
         return audioFileType
+
+    @staticmethod
+    def isDeleteSupported():
+        return ADDON.getSetting("deleteSupported") == 'true'

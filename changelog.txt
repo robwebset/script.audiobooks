@@ -1,3 +1,7 @@
+v100.8.1 (2017-02-10)
+- Support Folder.jpg in folders containing only folders
+- Support Fanart for audio books
+
 v100.8.0 (2016-12-16)
 - Update for support of URepo
 

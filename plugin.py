@@ -90,6 +90,12 @@ class MenuNavigator():
             except:
                 pass
 
+            plot = ""
+            try:
+                plot = "[B]%s[/B]" % adir.encode("utf-8")
+            except:
+                plot = adir
+
             # Check if there are any images for this directory
             iconImage = 'DefaultFolder.png'
             fanartImage = FANART
@@ -103,6 +109,7 @@ class MenuNavigator():
             url = self._build_url({'mode': 'directory', 'directory': fullDir})
             li = xbmcgui.ListItem(displayName, iconImage=iconImage)
             li.setProperty("Fanart_Image", fanartImage)
+            li.setInfo('video', {'Plot': plot})
             li.addContextMenuItems([], replaceItems=True)
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=True)
 
@@ -154,12 +161,19 @@ class MenuNavigator():
                 # No need to have an error for logging
                 pass
 
+            plot = ""
+            try:
+                plot = "[B]%s[/B]" % displayString
+            except:
+                plot = displayString
+
             if isRead:
                 displayString = '* %s' % displayString
 
             url = self._build_url({'mode': 'chapters', 'filename': audioBookHandler.getFile(True), 'cover': coverTargetName})
             li = xbmcgui.ListItem(displayString, iconImage=coverTargetName)
             li.setProperty("Fanart_Image", audioBookHandler.getFanArt())
+            li.setInfo('video', {'Plot': plot})
             li.addContextMenuItems(self._getContextMenu(audioBookHandler), replaceItems=True)
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=True)
 
@@ -186,6 +200,12 @@ class MenuNavigator():
 
         audioBookHandler = AudioBookHandler.createHandler(fullpath)
 
+        plot = ""
+        try:
+            plot = "[B]%s[/B]" % audioBookHandler.getTitle()
+        except:
+            plot = audioBookHandler.getTitle()
+
         chapters = audioBookHandler.getChapterDetails()
 
         if len(chapters) < 1:
@@ -194,6 +214,7 @@ class MenuNavigator():
             li = xbmcgui.ListItem(ADDON.getLocalizedString(32018), iconImage=defaultImage)
             li.setProperty("Fanart_Image", audioBookHandler.getFanArt())
             li.addContextMenuItems([], replaceItems=True)
+            li.setInfo('video', {'Plot': plot})
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=False)
 
         secondsIn, chapterPosition = audioBookHandler.getPosition()
@@ -209,6 +230,7 @@ class MenuNavigator():
 
             li = xbmcgui.ListItem(displayName, iconImage=defaultImage)
             li.setProperty("Fanart_Image", audioBookHandler.getFanArt())
+            li.setInfo('video', {'Plot': plot})
             li.addContextMenuItems([], replaceItems=True)
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=False)
 
@@ -251,6 +273,7 @@ class MenuNavigator():
                 li.setInfo('music', {'Duration': durationEntry})
 
             li.setProperty("Fanart_Image", audioBookHandler.getFanArt())
+            li.setInfo('video', {'Plot': plot})
             li.addContextMenuItems([], replaceItems=True)
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=False)
 

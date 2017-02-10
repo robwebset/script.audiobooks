@@ -16,6 +16,7 @@ from database import AudioBooksDB
 from ffmpegLib import FfmpegBase
 
 ADDON = xbmcaddon.Addon(id='script.audiobooks')
+FANART = ADDON.getAddonInfo('fanart')
 
 
 # Generic class for handling audiobook details
@@ -277,6 +278,31 @@ class AudioBookHandler():
                 pass
 
         return coverImageValue
+
+    # Gets the fanart for the given file
+    def getFanArt(self):
+        baseDirectory = self.filePath
+        if self.filePath.lower().endswith('.m4b'):
+            # Check if there is a file just for this audiobook
+            fullpathLocalImage, bookExt = os.path.splitext(self.filePath)
+            fullpathLocalImage = "%s-fanart.jpg" % fullpathLocalImage
+
+            if xbmcvfs.exists(fullpathLocalImage):
+                log("AudioBookHandler: Found book fanart image %s" % fullpathLocalImage)
+                return fullpathLocalImage
+
+            # Get the name of the directory this file is in
+            baseDirectory = (os_path_split(self.filePath))[0]
+
+        # Now check if there is a default fanart file
+        fanartImage = FANART
+        subdirs, filesInDir = xbmcvfs.listdir(baseDirectory)
+        for fileInDir in filesInDir:
+            if fileInDir.lower() in ['fanart.jpg', 'fanart.png']:
+                fanartImage = os_path_join(baseDirectory, fileInDir)
+                break
+
+        return fanartImage
 
     def getPosition(self):
         if self.position < 0:

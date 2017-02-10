@@ -143,3 +143,11 @@ msgstr ""
 msgctxt "#32030"
 msgid "Play"
 msgstr ""
+
+msgctxt "#32031"
+msgid "Enable Delete Menu Item"
+msgstr ""
+
+msgctxt "#32032"
+msgid "Delete"
+msgstr ""

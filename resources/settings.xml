@@ -6,6 +6,7 @@
     	<setting id="autoNumberChapters" label="32020" type="bool" default="false"/>
     	<setting id="showArtistInBookList" label="32028" type="bool" default="false"/>
     	<setting id="showPlayButtonIfOneChapter" label="32029" type="bool" default="false"/>
+    	<setting id="deleteSupported" label="32031" visible="false" option="hidden" type="bool" default="false"/>
 		<setting id="fallbackCoverImage" label="32014" type="image"/>
 	</category>
 	<category label="32015">

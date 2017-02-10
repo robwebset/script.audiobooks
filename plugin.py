@@ -90,9 +90,19 @@ class MenuNavigator():
             except:
                 pass
 
+            # Check if there are any images for this directory
+            iconImage = 'DefaultFolder.png'
+            fanartImage = FANART
+            subDirs, subFiles = xbmcvfs.listdir(fullDir)
+            for fileInDir in subFiles:
+                if fileInDir.lower() in ['fanart.jpg', 'fanart.png']:
+                    fanartImage = os_path_join(fullDir, fileInDir)
+                elif fileInDir.lower() in ['folder.jpg', 'folder.png']:
+                    iconImage = os_path_join(fullDir, fileInDir)
+
             url = self._build_url({'mode': 'directory', 'directory': fullDir})
-            li = xbmcgui.ListItem(displayName, iconImage='DefaultFolder.png')
-            li.setProperty("Fanart_Image", FANART)
+            li = xbmcgui.ListItem(displayName, iconImage=iconImage)
+            li.setProperty("Fanart_Image", fanartImage)
             li.addContextMenuItems([], replaceItems=True)
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=True)
 
@@ -149,7 +159,7 @@ class MenuNavigator():
 
             url = self._build_url({'mode': 'chapters', 'filename': audioBookHandler.getFile(True), 'cover': coverTargetName})
             li = xbmcgui.ListItem(displayString, iconImage=coverTargetName)
-            li.setProperty("Fanart_Image", FANART)
+            li.setProperty("Fanart_Image", audioBookHandler.getFanArt())
             li.addContextMenuItems(self._getContextMenu(audioBookHandler), replaceItems=True)
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=True)
 
@@ -182,7 +192,7 @@ class MenuNavigator():
             url = self._build_url({'mode': 'play', 'filename': audioBookHandler.getFile(True), 'startTime': 0, 'chapter': 0})
 
             li = xbmcgui.ListItem(ADDON.getLocalizedString(32018), iconImage=defaultImage)
-            li.setProperty("Fanart_Image", FANART)
+            li.setProperty("Fanart_Image", audioBookHandler.getFanArt())
             li.addContextMenuItems([], replaceItems=True)
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=False)
 
@@ -198,7 +208,7 @@ class MenuNavigator():
                 displayName = "%s (%s: %d)" % (displayName, ADDON.getLocalizedString(32017), chapterPosition)
 
             li = xbmcgui.ListItem(displayName, iconImage=defaultImage)
-            li.setProperty("Fanart_Image", FANART)
+            li.setProperty("Fanart_Image", audioBookHandler.getFanArt())
             li.addContextMenuItems([], replaceItems=True)
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=False)
 
@@ -240,7 +250,7 @@ class MenuNavigator():
                 # how far through the book the chapter is
                 li.setInfo('music', {'Duration': durationEntry})
 
-            li.setProperty("Fanart_Image", FANART)
+            li.setProperty("Fanart_Image", audioBookHandler.getFanArt())
             li.addContextMenuItems([], replaceItems=True)
             xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=False)
 
@@ -289,6 +299,11 @@ class MenuNavigator():
         # Clear History
         cmd = self._build_url({'mode': 'clear', 'filename': bookHandle.getFile(True)})
         ctxtMenu.append((ADDON.getLocalizedString(32011), 'RunPlugin(%s)' % cmd))
+
+        # Add delete support if it is enabled
+        if Settings.isDeleteSupported():
+            cmd = self._build_url({'mode': 'delete', 'filename': bookHandle.getFile(True)})
+            ctxtMenu.append((ADDON.getLocalizedString(32032), 'RunPlugin(%s)' % cmd))
 
         return ctxtMenu
 

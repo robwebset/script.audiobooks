@@ -87,7 +87,44 @@ class AVFormatContext(Structure):
     ]
 
 
+# Between ffmpeg v2 and ffmpeg v3 the structure changes slightly
+class AVFormatContext3(Structure):
+    # Note: Not complete, only up until the values required, needs that many as it shifts the memory bytes
+    _fields_ = [
+        ('av_class', c_void_p),
+        ('iformat', c_void_p),
+        ('oformat', c_void_p),
+        ('priv_data', c_void_p),
+        ('pb', c_void_p),
+        ('ctx_flags', c_int),
+        ('nb_streams', c_uint),
+        ('streams', c_void_p),
+        ('filename', c_char * 1024),
+        ('start_time', c_int64),
+        ('duration', c_int64),
+        ('bit_rate', c_int64),
+        ('packet_size', c_uint),
+        ('max_delay', c_int),
+        ('flags', c_int),
+        ('probesize', c_int64),
+        ('max_analyze_duration', c_int64),
+        ('key', c_void_p),
+        ('keylen', c_int),
+        ('nb_programs', c_uint),
+        ('programs', c_void_p),
+        ('video_codec_id', c_int),
+        ('audio_codec_id', c_int),
+        ('subtitle_codec_id', c_int),
+        ('max_index_size', c_uint),
+        ('max_picture_buffer', c_uint),
+        ('nb_chapters', c_uint),
+        ('chapters', POINTER(POINTER(AVChapter))),
+        ('metadata', POINTER(AVDictionary))
+    ]
+
+
 FFMPEG_INSTANCE = None
+FFMPEG_VERSION = 2
 
 
 # Utility class for ffmpeg operations
@@ -154,15 +191,24 @@ class FFMpegLib(FfmpegBase):
 
             self.avformat_open_input = avformat.avformat_open_input
             self.avformat_open_input.restype = c_int
-            self.avformat_open_input.argtypes = [POINTER(POINTER(AVFormatContext)), c_char_p, POINTER(AVInputFormat), POINTER(POINTER(AVDictionary))]
+            if FFMPEG_VERSION == 3:
+                self.avformat_open_input.argtypes = [POINTER(POINTER(AVFormatContext3)), c_char_p, POINTER(AVInputFormat), POINTER(POINTER(AVDictionary))]
+            else:
+                self.avformat_open_input.argtypes = [POINTER(POINTER(AVFormatContext)), c_char_p, POINTER(AVInputFormat), POINTER(POINTER(AVDictionary))]
 
             self.avformat_close_input = avformat.avformat_close_input
             self.avformat_close_input.restype = None
-            self.avformat_close_input.argtypes = [POINTER(POINTER(AVFormatContext))]
+            if FFMPEG_VERSION == 3:
+                self.avformat_close_input.argtypes = [POINTER(POINTER(AVFormatContext3))]
+            else:
+                self.avformat_close_input.argtypes = [POINTER(POINTER(AVFormatContext))]
 
             self.avformat_find_stream_info = avformat.avformat_find_stream_info
             self.avformat_find_stream_info.restype = c_int
-            self.avformat_find_stream_info.argtypes = [POINTER(AVFormatContext), POINTER(POINTER(AVDictionary))]
+            if FFMPEG_VERSION == 3:
+                self.avformat_find_stream_info.argtypes = [POINTER(AVFormatContext3), POINTER(POINTER(AVDictionary))]
+            else:
+                self.avformat_find_stream_info.argtypes = [POINTER(AVFormatContext), POINTER(POINTER(AVDictionary))]
 
             self.av_dict_get = avutil.av_dict_get
             self.av_dict_get.restype = POINTER(AVDictionaryEntry)
@@ -203,7 +249,11 @@ class FFMpegLib(FfmpegBase):
                 log("FFMpegLib: Failed to disable ffmpeg logging")
 
             self.av_register_all()
-            pFormatCtx = POINTER(AVFormatContext)()
+
+            if FFMPEG_VERSION == 3:
+                pFormatCtx = POINTER(AVFormatContext3)()
+            else:
+                pFormatCtx = POINTER(AVFormatContext)()
 
             # Before using the media filename need to ensure it is encoded
             # as ascii as that is what ffmpeg expects
@@ -337,6 +387,11 @@ class FFMpegLib(FfmpegBase):
         if len(libLocation) < 4:
             return None
 
+        # Check if this is version 3 of ffmpeg as things are slightly different
+        if '-55' in libLocation['avutil']:
+            global FFMPEG_VERSION
+            FFMPEG_VERSION = 3
+
         return libLocation
 
     # Get media metadata
@@ -349,8 +404,14 @@ class FFMpegLib(FfmpegBase):
         tag = POINTER(AVDictionaryEntry)()
 
         while not done:
-            tag = self.av_dict_get(meta, ''.encode('ascii'), tag, 2)
+            try:
+                tag = self.av_dict_get(meta, ''.encode('ascii'), tag, 2)
+            except:
+                log("FFMpegLib: Failed to get metadata with error: %s" % traceback.format_exc(), xbmc.LOGERROR)
+                tag = None
+
             if tag:
+                log("*** ROB ***: %s" % str(tag.contents.key))
                 # make sure all the keys are lower case
                 metaDict[tag.contents.key.lower()] = tag.contents.value
             else:

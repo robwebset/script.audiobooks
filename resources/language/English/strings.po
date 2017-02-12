@@ -151,3 +151,11 @@ msgstr ""
 msgctxt "#32032"
 msgid "Delete"
 msgstr ""
+
+msgctxt "#32033"
+msgid "Permanently delete the following location?"
+msgstr ""
+
+msgctxt "#32034"
+msgid "Failed to delete"
+msgstr ""

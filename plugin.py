@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+import os
 import sys
 import urllib
 import urlparse
+import traceback
 import xbmc
 import xbmcgui
 import xbmcplugin
@@ -347,6 +349,48 @@ class MenuNavigator():
 
         xbmc.executebuiltin("Container.Refresh")
 
+    def delete(self, fullpath):
+        log("AudioBooksPlugin: Delete for %s" % fullpath)
+
+        # make sure that delete is enabled
+        if not Settings.isDeleteSupported():
+            return
+
+        # Prompt the user to make sure they really want to delete the given location
+        okToDelete = xbmcgui.Dialog().yesno(ADDON.getLocalizedString(32001), ADDON.getLocalizedString(32033), fullpath)
+
+        if not okToDelete:
+            return
+
+        try:
+            # Check if this is a file or directory
+            # Support special paths like smb:// means that we can not just call
+            # os.path.isfile as it will return false even if it is a file
+            fileExt = os.path.splitext(fullpath)[1]
+            # If this is a file, then get it's parent directory
+            if fileExt not in [None, ""]:
+                # This is just a file, so delete just the file
+                xbmcvfs.delete(fullpath)
+            else:
+                # Delete all the files in the directory and then the directory itself
+                dirs, files = xbmcvfs.listdir(fullpath)
+                for aFile in files:
+                    if aFile.startswith('.'):
+                        continue
+                    log("AudioBooksPlugin: Removing file %s" % aFile)
+                    abookFile = os_path_join(fullpath, aFile)
+                    xbmcvfs.delete(abookFile)
+                # Now remove the actual directory
+                xbmcvfs.rmdir(fullpath)
+
+        except:
+            log("AudioBooksPlugin: Failed to delete %s with error %s" % (fullpath, traceback.format_exc()))
+            # Tell the user that the delete failed
+            xbmcgui.Dialog().ok(ADDON.getLocalizedString(32001), ADDON.getLocalizedString(32034), fullpath)
+
+        # Refresh the page without the file that was deleted
+        xbmc.executebuiltin("Container.Refresh")
+
     def _getDisplayTimeFromSeconds(self, secondsIn):
         seconds = secondsIn % 60
         minutes = 0
@@ -476,4 +520,15 @@ if __name__ == '__main__':
         if (filename is not None) and (len(filename) > 0):
             menuNav = MenuNavigator(base_url, addon_handle)
             menuNav.clear(filename[0])
+            del menuNav
+
+    elif mode[0] == 'delete':
+        log("AudioBooksPlugin: Mode is CLEAR")
+
+        # Get the book to remove
+        filename = args.get('filename', None)
+
+        if (filename is not None) and (len(filename) > 0):
+            menuNav = MenuNavigator(base_url, addon_handle)
+            menuNav.delete(filename[0])
             del menuNav

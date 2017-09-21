@@ -87,11 +87,17 @@ class AudioBookHandler():
         artist = ""
         duration = -1
         try:
+            mutagenFile = None
+            # First try with the default encoding
             try:
-                fullPath = fullPath.encode('utf-8')
+                mutagenFile = mutagen.File(fullPath, easy=True)
             except:
-                pass
-            mutagenFile = mutagen.File(fullPath, easy=True)
+                log("AudioBookHandler: Failed to read metadata for audio book %s, %s" % (fullPath, traceback.format_exc()))
+                try:
+                    fullPath = fullPath.encode('utf-8')
+                    mutagenFile = mutagen.File(fullPath, easy=True)
+                except:
+                    log("AudioBookHandler: Failed to encode as utf-8, %s" % traceback.format_exc())
 
             if mutagenFile not in [None, ""]:
                 # We construct an empty array for items that are not found
@@ -135,10 +141,17 @@ class AudioBookHandler():
 
         coverArt = None
         try:
+            mutagenFile = None
+            # First try with the default encoding
             try:
-                fullPath = fullPath.encode('utf-8')
+                mutagenFile = mutagen.File(fullPath)
             except:
-                pass
+                log("AudioBookHandler: Failed to read art work for audio book %s, %s" % (fullPath, traceback.format_exc()))
+                try:
+                    fullPath = fullPath.encode('utf-8')
+                    mutagenFile = mutagen.File(fullPath)
+                except:
+                    log("AudioBookHandler: Failed to encode as utf-8, %s" % traceback.format_exc())
 
             mutagenFile = mutagen.File(fullPath)
 
@@ -147,38 +160,66 @@ class AudioBookHandler():
                 targetFile = self._getMainCoverLocation()
                 log("AudioBookHandler: Cached cover target: %s" % targetFile)
 
+                # First try without encoding
                 try:
-                    targetFile = targetFile.encode('utf-8')
-                except:
-                    pass
-
-                # Check to see if the pictures attribute is there
-                if hasattr(mutagenFile, 'pictures'):
-                    log("AudioBookHandler: Found pictures attribute")
-                    if len(mutagenFile.pictures) > 0:
-                        # write artwork to new image
-                        with open(targetFile, 'wb') as img:
-                            img.write(mutagenFile.pictures[0].data)
-                        coverArt = targetFile
-
-                if (coverArt in [None, ""]) and ('covr' in mutagenFile):
-                    log("AudioBookHandler: Found COVR attribute")
-                    if len(mutagenFile['covr']) > 0:
-                        with open(targetFile, 'wb') as img:
-                            img.write(mutagenFile['covr'][0])
-                        coverArt = targetFile
-
-                if (coverArt in [None, ""]):
-                    for aTag in mutagenFile:
-                        if 'APIC:' in aTag:
-                            log("AudioBookHandler: Found APIC: attribute: %s" % aTag)
+                    # Check to see if the pictures attribute is there
+                    if hasattr(mutagenFile, 'pictures'):
+                        log("AudioBookHandler: Found pictures attribute")
+                        if len(mutagenFile.pictures) > 0:
+                            # write artwork to new image
                             with open(targetFile, 'wb') as img:
-                                img.write(mutagenFile[aTag].data)
+                                img.write(mutagenFile.pictures[0].data)
                             coverArt = targetFile
-                            break
+
+                    if (coverArt in [None, ""]) and ('covr' in mutagenFile):
+                        log("AudioBookHandler: Found COVR attribute")
+                        if len(mutagenFile['covr']) > 0:
+                            with open(targetFile, 'wb') as img:
+                                img.write(mutagenFile['covr'][0])
+                            coverArt = targetFile
+
+                    if (coverArt in [None, ""]):
+                        for aTag in mutagenFile:
+                            if 'APIC:' in aTag:
+                                log("AudioBookHandler: Found APIC: attribute: %s" % aTag)
+                                with open(targetFile, 'wb') as img:
+                                    img.write(mutagenFile[aTag].data)
+                                coverArt = targetFile
+                                break
+                except:
+                    log("AudioBookHandler: Failed to save Album Art without encoding, %s" % traceback.format_exc())
+                    try:
+                        targetFile = targetFile.encode('utf-8')
+                        # Check to see if the pictures attribute is there
+                        if hasattr(mutagenFile, 'pictures'):
+                            log("AudioBookHandler: Found pictures attribute")
+                            if len(mutagenFile.pictures) > 0:
+                                # write artwork to new image
+                                with open(targetFile, 'wb') as img:
+                                    img.write(mutagenFile.pictures[0].data)
+                                coverArt = targetFile
+
+                        if (coverArt in [None, ""]) and ('covr' in mutagenFile):
+                            log("AudioBookHandler: Found COVR attribute")
+                            if len(mutagenFile['covr']) > 0:
+                                with open(targetFile, 'wb') as img:
+                                    img.write(mutagenFile['covr'][0])
+                                coverArt = targetFile
+
+                        if (coverArt in [None, ""]):
+                            for aTag in mutagenFile:
+                                if 'APIC:' in aTag:
+                                    log("AudioBookHandler: Found APIC: attribute: %s" % aTag)
+                                    with open(targetFile, 'wb') as img:
+                                        img.write(mutagenFile[aTag].data)
+                                    coverArt = targetFile
+                                    break
+                    except:
+                        log("AudioBookHandler: Failed to encode as utf-8, %s" % traceback.format_exc())
+
             del mutagenFile
         except:
-            log("AudioBookHandler: Failed to read metadata for audio book %s, %s" % (fullPath, traceback.format_exc()))
+            log("AudioBookHandler: Failed to read art work for audio book %s, %s" % (fullPath, traceback.format_exc()))
             coverArt = None
 
         # If we had to copy the file locally, make sure we delete it
@@ -355,7 +396,10 @@ class AudioBookHandler():
 
     # Create a list item from an audiobook details
     def _getListItem(self, title, startTime=-1, chapterTitle=''):
-        log("AudioBookHandler: Getting listitem for %s (Chapter: %s)" % (title, chapterTitle))
+        try:
+            log("AudioBookHandler: Getting listitem for %s (Chapter: %s)" % (title, chapterTitle))
+        except:
+            pass
 
         listitem = xbmcgui.ListItem()
         # Set the display title on the music player

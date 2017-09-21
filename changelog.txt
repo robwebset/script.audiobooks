@@ -1,3 +1,6 @@
+v100.8.3 (2017-09-21)
+- Character encoding fixes
+
 v100.8.2 (2017-06-02)
 - Character encoding fix
 

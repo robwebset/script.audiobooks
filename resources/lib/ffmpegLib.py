@@ -411,7 +411,7 @@ class FFMpegLib(FfmpegBase):
                 tag = None
 
             if tag:
-                log("*** ROB ***: %s" % str(tag.contents.key))
+                log("FFMpegLib: Found key %s" % str(tag.contents.key))
                 # make sure all the keys are lower case
                 metaDict[tag.contents.key.lower()] = tag.contents.value
             else:

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.audiobooks" name="AudioBooks" version="100.8.3" provider-name="robwebset">
+<addon id="script.audiobooks" name="AudioBooks" version="100.8.4" provider-name="robwebset">
 	<requires>
 		<import addon="xbmc.python" version="2.14.0"/>
 		<import addon="script.resource.mutagen" version="1.34.1"/>
@@ -11,8 +11,10 @@
 	<extension point="xbmc.service" library="service.py" start="login"/>
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Play AudioBooks</summary>
+		<summary lang="he">נגן ספרי אודיו</summary>
 
 		<description lang="en">Allows the playing of AudioBooks</description>
+		<description lang="he">מאפשר לנגן ספרי אודיו</description>
 
 		<language></language>
 		<platform>all</platform>

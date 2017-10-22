@@ -1,0 +1,162 @@
+# Kodi Media Center language file
+# Addon Name: AudioBooks
+# Addon id: script.audiobooks
+# Addon Provider: robwebset
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-10-22 10:31+0300\n"
+"Last-Translator: A. Dambledore\n"
+"Language-Team: Eng2Heb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: he_IL\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+msgctxt "Addon Summary"
+msgid "Play AudioBooks"
+msgstr "נגן ספרי אודיו"
+
+msgctxt "Addon Description"
+msgid "Allows the playing of AudioBooks"
+msgstr "מאפשר לנגן ספרי אודיו"
+
+msgctxt "#32001"
+msgid "AudioBooks"
+msgstr "ספרי אודיו"
+
+msgctxt "#32002"
+msgid "General"
+msgstr "כללי"
+
+msgctxt "#32003"
+msgid "Debugging"
+msgstr "ניפוי שגיאות"
+
+msgctxt "#32004"
+msgid "Enable debug logging"
+msgstr "הפעל יומן רישום מורחב"
+
+msgctxt "#32005"
+msgid "AudioBook Folder"
+msgstr "תיקיית ספר אודיו"
+
+msgctxt "#32006"
+msgid "AudioBook Folder not set"
+msgstr "התיקייה של ספר האודיו אינה מוגדרת"
+
+msgctxt "#32007"
+msgid "Operations"
+msgstr "פעולות"
+
+msgctxt "#32008"
+msgid "Clean AudioBook Cover Cache"
+msgstr "נקה מטמון של העטיפה"
+
+msgctxt "#32009"
+msgid "Clean AudioBook Cover Cache Complete"
+msgstr "הניקוי של מטמון העטיפות הסתיים בהצלחה"
+
+msgctxt "#32010"
+msgid "Mark As Complete"
+msgstr "סמן כמשימה שהושלמה"
+
+msgctxt "#32011"
+msgid "Clear History"
+msgstr "נקה היסטוריה"
+
+msgctxt "#32012"
+msgid "Clear AudioBook Details Cache"
+msgstr "נקה פרטים מהמטמון של ספר האודיו"
+
+msgctxt "#32013"
+msgid "Clear AudioBook Details Cache Complete"
+msgstr "ניקוי פרטים מהמטמון של ספר האודיו הסתיים בהצלחנ"
+
+msgctxt "#32014"
+msgid "Default AudioBook Cover Image"
+msgstr "תמונת ברירת המחדל לספר האודיו"
+
+msgctxt "#32015"
+msgid "ffmpeg"
+msgstr "ffmpeg"
+
+msgctxt "#32016"
+msgid "Highlight Completed Books And Chapters"
+msgstr "סמן פרקים וספרים שהושלמו"
+
+msgctxt "#32017"
+msgid "Chapter"
+msgstr "פרק"
+
+msgctxt "#32018"
+msgid "Play From Start"
+msgstr "נגן מהתחלה"
+
+msgctxt "#32019"
+msgid "Resume From"
+msgstr "המשך מ-"
+
+msgctxt "#32020"
+msgid "Automatically Number Chapters"
+msgstr "מספר פרקים באופן אוטומטי"
+
+msgctxt "#32021"
+msgid "Executable Location"
+msgstr "מיקום קובץ הרצה"
+
+msgctxt "#32022"
+msgid "FFmpeg Usage"
+msgstr "שימוש ב-FFmpeg"
+
+msgctxt "#32023"
+msgid "None"
+msgstr "ללא"
+
+msgctxt "#32024"
+msgid "Libraries"
+msgstr "סיפריות"
+
+msgctxt "#32025"
+msgid "Executable"
+msgstr "קובץ הרצה"
+
+msgctxt "#32026"
+msgid "Library Location"
+msgstr "מיקום ספריה"
+
+msgctxt "#32027"
+msgid "Auto Detect FFmpeg On Next Restart"
+msgstr "זיהוי אוטומטי של FFmpeg באיתחול הבא"
+
+msgctxt "#32028"
+msgid "Show Artist Name In Book List"
+msgstr "הצג את שם האמן ברשימת ספרים"
+
+msgctxt "#32029"
+msgid "Show Play Button If Only One Chapter"
+msgstr "הצג לחצן הפעלה אם יש פרק אחד בלבד"
+
+msgctxt "#32030"
+msgid "Play"
+msgstr "ניגון"
+
+msgctxt "#32031"
+msgid "Enable Delete Menu Item"
+msgstr "אפשר פריט תפריט מחיקה"
+
+msgctxt "#32032"
+msgid "Delete"
+msgstr "מחק"
+
+msgctxt "#32033"
+msgid "Permanently delete the following location?"
+msgstr "האם למחוק לצמיתות את המיקום?"
+
+msgctxt "#32034"
+msgid "Failed to delete"
+msgstr "נכשל במחיקv"

@@ -1,0 +1,115 @@
+[[https://github.com/robwebset/script.audiobooks/raw/master/icon.png]]
+
+== Introduction ==
+You can install this addon from: [https://www.urepo.org URepo Repository]
+<br />
+AudioBooks is an addon that allows you to list and play your AudioBooks using Kodi. Support includes m4b file format and the standard file formats supported by Kodi. (e.g. mp3, flac etc)
+<br />
+On installation of the AudioBooks addon it will need configuring to point to the directory that contains all of your AudioBook files. This can be done via the AudioBooks Settings, or if not set, you will be prompted on first use.
+<br />
+== Basic Support ==
+With the default configuration you can:
+* List all your AudioBooks (By filename)
+* Play your AudioBooks
+* Resume your AudioBooks from the point it was last stopped
+* Display of AudioBook Titles
+* Display of AudioBook Cover Artwork
+<br />
+== Advanced Support ==
+In order to get features that include:
+* Listing of AudioBook Chapters
+* Starting playing from a given chapter marker
+You will need some form of FFmpeg installed, see the following section on how to make FFmpeg available.
+<br />
+== Enabling FFmpeg ==
+There are 2 different ways to enable FFmpeg
+* Using the Kodi ffmpeg modules
+* Using a locally installed ffmpeg on the machine Kodi is running on.
+Note: If you previously loaded books without ffmpeg, then you will need to clear the cache via the settings - or the context menu to have the audiobooks rescanned.
+<br />
+=== FFmpeg Modules ===
+There are a set of script.module.ffmpeg addons available that will supply the required FFmpeg files for each platform. Make sure you install the module designed for your platform:
+* Windows: [https://github.com/robwebset/kodi.ffmpeg.bundles/raw/master/addons/windows/script.module.ffmpeg-1.0.0.zip script.module.ffmpeg-1.0.0.zip]
+* Linux: [https://github.com/robwebset/kodi.ffmpeg.bundles/raw/master/addons/linux/script.module.ffmpeg-1.0.0.zip script.module.ffmpeg-1.0.0.zip]
+* Mac OS X: [https://github.com/robwebset/kodi.ffmpeg.bundles/raw/master/addons/osx/script.module.ffmpeg-1.0.0.zip script.module.ffmpeg-1.0.0.zip]
+* Android: [https://github.com/robwebset/kodi.ffmpeg.bundles/raw/master/addons/android/script.module.ffmpeg-1.0.0.zip script.module.ffmpeg-1.0.0.zip]
+
+After installing script.module.ffmpeg, if you already have AudioBooks installed, then enable "Auto Detect FFmpeg On Next Restart" in the settings and restart Kodi.
+
+Note: The Windows version of script.module.ffmpeg is optional, Kodi for windows already comes with the FFmpeg libraries, and the AudioBooks addon will use these be default.
+
+=== FFmpeg Manual Install ===
+You will need to download [https://www.ffmpeg.org/ ffmpeg] to a location on your machine and then use the AudioBooks Addon Settings to point to the ffmpeg executable. If you are running on a Linux or Android system then you need to ensure that the ffmpeg program has execute permissions otherwise it will not run (In order to set execute permissions on Android you will most likely need to have rooted your device)
+<br />
+== Network Support ==
+If you store your audiobooks on a network server and use Kodi to access them via smb:// or nfs:// then the initial listing of the available books will be slower (Until they are cached into the AudioBooks database) and chapter listings will always be slower.
+<br />
+'''Why?''' - Because external programs (like ffmpeg) is not able to read the smb:// or nfs:// format that Kodi uses, so in order for the AudioBooks Addon to use ffmpeg to read the file, it is copied to a temporary local directory, it is this copy that makes the processing of data slower.
+<br />
+'''How to Avoid This?''' - Either store the books locally or use the OS level network functionality to map the drive in such a way that it looks like a local drive.
+<br />
+== AudioBook Listing ==
+When entering the addon via the Music Addons Menu the available audiobooks will be listed. Any directories that exist will be displayed with their directory name and enclosed in square brackets. On selecting an audiobook, the chapters in that book will be displayed (Note: If ffmpeg support is not enabled then a link to play from the start of the book, or resume will be displayed).
+<br />
+Any audiobooks or chapters that have been marked previously as complete will start with an asterisk ("*").
+<br />
+== Cover Art ==
+The cover art for a given audiobook is retrieved in the following order:
+# A jpg file in the same directory as the audiobook with the same name (i.e. an audiobook with the name myaudiobook.m4b and an image with the name myaudiobook.jpg)
+# An image that has previously been cached from a book (Based on the file name of the book)
+# Extracted internal image from the audiobook file
+# The default cover image set in the AudioBooks settings screen.
+<br />
+== Settings ==
+=== General ===
+{| border="0"
+|- valign=top
+|
+:'''AudioBooks Folder'''
+::The Location where the AudioBooks are stored
+:'''Highlight Completed Books And Chapters'''
+::Indicate which books and chapters have been completed
+:'''Automatically Number Chapters'''
+::Will give each chapter in an audiobook a number when displayed
+:'''Show Artist Name In Book List'''
+::Show the artist name in addition to the title when listing books (If the title does not already contain the artist)
+:'''Show Play Button If Only One Chapter'''
+::If there is only one chapter in the book, display the word "Play" instead of the chapter name/title.
+:'''Default AudioBook Cover Image'''
+::The default cover image to use if there is no image available for the audiobook
+|}
+
+=== ffmpeg ===
+{| border="0"
+|- valign=top
+|
+:'''Auto Detect FFmpeg On Next Restart'''
+::The next time Kodi restarts it will search for installations of ffmpeg and update the settings location
+:'''FFmpeg Usage'''
+::Options are None (Do not use FFmpeg), Libraries (Use FFmpeg shared libraries) and Executable (Use FFmpeg executable)
+:'''- Library Location''' 
+::(If Usage set to "Libraries") The location of the ffmpeg libraries
+:'''- Library Location''' 
+::(If Usage set to "Executable") The location of the ffmpeg executable
+|}
+
+=== Operations ===
+{| border="0"
+|- valign=top
+|
+:'''Clean AudioBook Cover Cache'''
+::Removes any audiobook covers that have been cached
+:'''Clear AudioBook Details Cache'''
+::Clears any data cached about the audiobooks (inc. read markers)
+:<u>'''''Debugging'''''</u>
+::
+:'''Enable debug logging'''
+::Enables AudioBook debug logging (Required if reporting a problem) - for this to work, system-wide Kodi logging must also be enabled
+|}
+<br />
+== Debugging ==
+If reporting a problem, please also provide a debug log. To do this you need to enable BOTH:
+* Kodi logging from the main setting menu
+* AudioBooks debug from the AudioBooks addon settings menu
+Please do not paste the log into the forum thread, just link to it.
+<br />

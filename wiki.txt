@@ -1,8 +1,6 @@
 [[https://github.com/robwebset/script.audiobooks/raw/master/icon.png]]
 
 == Introduction ==
-You can install this addon from: [https://www.urepo.org URepo Repository]
-<br />
 AudioBooks is an addon that allows you to list and play your AudioBooks using Kodi. Support includes m4b file format and the standard file formats supported by Kodi. (e.g. mp3, flac etc)
 <br />
 On installation of the AudioBooks addon it will need configuring to point to the directory that contains all of your AudioBook files. This can be done via the AudioBooks Settings, or if not set, you will be prompted on first use.
